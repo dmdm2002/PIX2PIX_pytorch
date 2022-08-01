@@ -30,9 +30,6 @@ class train(Options.param):
         classname = m.__class__.__name__
         if classname.find("Conv") != -1:
             torch.nn.init.normal_(m.weight.data, 0.0, 0.02)
-        elif classname.find("BatchNorm2d") != -1:
-            torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
-            torch.nn.init.constant_(m.bias.data, 0.0)
 
     def sampling(self, output, transform_to_image, name, epoch, type):
         os.makedirs(f"{self.OUTPUT_SAMPLE}/sample_{type}/{epoch}", exist_ok=True)
@@ -89,7 +86,7 @@ class train(Options.param):
         # pool_fake_B = ImagePool(self.POOL_SIZE)
 
         # 4. LOSS
-        criterion_GAN = torch.nn.MSELoss()
+        criterion_GAN = torch.nn.BCELoss()
         criterion_pixelwise = torch.nn.L1Loss()
 
         disp = LossDisplayer(["loss_G", "loss_D"])
